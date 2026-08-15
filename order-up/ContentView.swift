@@ -133,13 +133,55 @@ struct ContentView: View {
                         .font(.largeTitle)
                         .bold()
                     if milo > 0 {
-                        Text("🥤  Milo x\(milo)")
+                        HStack {
+                            Text("🥤  Milo x\(milo)")
+                            Spacer()
+                            Button {
+                                milo -= 1
+                                if milo < 0 { milo = 0 }
+                            } label: {
+                                Image(systemName: "minus.circle.fill")
+                            }
+                            Button {
+                                milo += 1
+                            } label: {
+                                Image(systemName: "plus.circle.fill")
+                            }
+                        }
                     }
                     if teh > 0 {
-                        Text("🍵  Teh x\(teh)")
+                        HStack {
+                            Text("🍵  Teh x\(teh)")
+                            Spacer()
+                            Button {
+                                teh -= 1
+                                if teh < 0 { teh = 0 }
+                            } label: {
+                                Image(systemName: "minus.circle.fill")
+                            }
+                            Button {
+                                teh += 1
+                            } label: {
+                                Image(systemName: "plus.circle.fill")
+                            }
+                        }
                     }
                     if toast > 0 {
-                        Text("🍞  Kaya Toast x\(toast)")
+                        HStack {
+                            Text("🍞  Kaya Toast x\(toast)")
+                            Spacer()
+                            Button {
+                                toast -= 1
+                                if toast < 0 { toast = 0 }
+                            } label: {
+                                Image(systemName: "minus.circle.fill")
+                            }
+                            Button {
+                                toast += 1
+                            } label: {
+                                Image(systemName: "plus.circle.fill")
+                            }
+                        }
                     }
                     Text("Total  $\(Double(milo) * 1.5 + Double(toast) * 2.0 + Double(teh) * 1.20, specifier: "%.2f")")
                         .font(.title2)
