@@ -212,6 +212,10 @@ struct ContentView: View {
                         Text("via \(paymentMethod)")
                             .font(.title3)
                             .foregroundStyle(.secondary)
+                        ShareLink(item: shareSummary) {
+                            Label("Share Order", systemImage: "square.and.arrow.up")
+                        }
+                        .controlSize(.large)
                         Button("Done") {
                             var summary = "\(dateFormatter.string(from: Date()))\n"
                             if milo > 0 { summary += "🥤 Milo x\(milo)\n" }
@@ -299,6 +303,17 @@ struct ContentView: View {
         f.dateStyle = .short
         f.timeStyle = .short
         return f
+    }
+
+    private var shareSummary: String {
+        var summary = "Order Up order\n"
+        if milo > 0 { summary += "🥤 Milo x\(milo)\n" }
+        if teh > 0 { summary += "🍵 Teh x\(teh)\n" }
+        if toast > 0 { summary += "🍞 Kaya Toast x\(toast)\n" }
+        let subtotal = Double(milo) * 1.5 + Double(toast) * 2.0 + Double(teh) * 1.20
+        let total = subtotal + subtotal * 0.09 + subtotal * 0.10 + tip
+        summary += String(format: "Total $%.2f via %@", total, paymentMethod)
+        return summary
     }
 }
 
