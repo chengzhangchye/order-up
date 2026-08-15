@@ -14,6 +14,8 @@ struct ContentView: View {
     @State private var flag = false
     @State private var arr: [String] = []
     @State private var showOrder = false
+    @State private var showHistory = false
+    @State private var history: [String] = []
 
     var body: some View {
         VStack(spacing: 20) {
@@ -124,6 +126,12 @@ struct ContentView: View {
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
             .font(.title2)
+
+            Button("History") {
+                showHistory = true
+            }
+            .controlSize(.large)
+            .font(.title2)
         }
         .padding(20)
         .sheet(isPresented: $showOrder) {
@@ -188,6 +196,12 @@ struct ContentView: View {
                         .bold()
                         .padding(.top, 8)
                     Button("Back to Order") {
+                        var summary = "\(dateFormatter.string(from: Date()))\n"
+                        if milo > 0 { summary += "🥤 Milo x\(milo)\n" }
+                        if teh > 0 { summary += "🍵 Teh x\(teh)\n" }
+                        if toast > 0 { summary += "🍞 Kaya Toast x\(toast)\n" }
+                        summary += String(format: "Total $%.2f", Double(milo) * 1.5 + Double(toast) * 2.0 + Double(teh) * 1.20)
+                        history.insert(summary, at: 0)
                         milo = 0
                         teh = 0
                         toast = 0
@@ -198,6 +212,22 @@ struct ContentView: View {
                 }
             }
         }
+        .sheet(isPresented: $showHistory) {
+            NavigationStack {
+                List(history, id: \.self) { entry in
+                    Text(entry)
+                        .font(.title3)
+                }
+                .navigationTitle("Order History")
+            }
+        }
+    }
+
+    private var dateFormatter: DateFormatter {
+        let f = DateFormatter()
+        f.dateStyle = .short
+        f.timeStyle = .short
+        return f
     }
 }
 
