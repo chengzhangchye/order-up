@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var showOrder = false
     @State private var showHistory = false
     @State private var history: [String] = []
+    @State private var tip: Double = 0
 
     var body: some View {
         VStack(spacing: 20) {
@@ -191,7 +192,23 @@ struct ContentView: View {
                             }
                         }
                     }
-                    Text("Total  $\(Double(milo) * 1.5 + Double(toast) * 2.0 + Double(teh) * 1.20, specifier: "%.2f")")
+                    let subtotal = Double(milo) * 1.5 + Double(toast) * 2.0 + Double(teh) * 1.20
+                    let gst = subtotal * 0.09
+                    let service = subtotal * 0.10
+                    let tipAmount = tip
+                    let grandTotal = subtotal + gst + service + tipAmount
+                    Text("Subtotal  $\(subtotal, specifier: "%.2f")")
+                    Text("GST (9%)  $\(gst, specifier: "%.2f")")
+                    Text("Service (10%)  $\(service, specifier: "%.2f")")
+                    Text("Tip  $\(tipAmount, specifier: "%.2f")")
+                    Picker("Tip", selection: $tip) {
+                        Text("$0").tag(0.0)
+                        Text("$2").tag(2.0)
+                        Text("$5").tag(5.0)
+                        Text("$10").tag(10.0)
+                    }
+                    .pickerStyle(.segmented)
+                    Text("TOTAL  $\(grandTotal, specifier: "%.2f")")
                         .font(.title2)
                         .bold()
                         .padding(.top, 8)
@@ -200,7 +217,7 @@ struct ContentView: View {
                         if milo > 0 { summary += "🥤 Milo x\(milo)\n" }
                         if teh > 0 { summary += "🍵 Teh x\(teh)\n" }
                         if toast > 0 { summary += "🍞 Kaya Toast x\(toast)\n" }
-                        summary += String(format: "Total $%.2f", Double(milo) * 1.5 + Double(toast) * 2.0 + Double(teh) * 1.20)
+                        summary += String(format: "Total $%.2f", grandTotal)
                         history.insert(summary, at: 0)
                         milo = 0
                         teh = 0
