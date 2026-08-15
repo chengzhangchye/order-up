@@ -18,6 +18,8 @@ struct ContentView: View {
     @State private var history: [String] = []
     @State private var tip: Double = 0
     @State private var paid = false
+    @State private var showPayment = false
+    @State private var paymentMethod = "Cash"
 
     var body: some View {
         VStack(spacing: 20) {
@@ -204,6 +206,9 @@ struct ContentView: View {
                             .bold()
                         Text("Amount paid: $\(grandTotal, specifier: "%.2f")")
                             .font(.title3)
+                        Text("via \(paymentMethod)")
+                            .font(.title3)
+                            .foregroundStyle(.secondary)
                         Button("Done") {
                             var summary = "\(dateFormatter.string(from: Date()))\n"
                             if milo > 0 { summary += "🥤 Milo x\(milo)\n" }
@@ -236,10 +241,37 @@ struct ContentView: View {
                         .bold()
                         .padding(.top, 8)
                     Button("Pay $\(grandTotal, specifier: "%.2f")") {
-                        paid = true
+                        showPayment = true
                     }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
+                    .sheet(isPresented: $showPayment) {
+                        VStack(spacing: 20) {
+                            Text("Payment")
+                                .font(.largeTitle)
+                                .bold()
+                            Text("Total: $\(grandTotal, specifier: "%.2f")")
+                                .font(.title3)
+                            Picker("Payment Method", selection: $paymentMethod) {
+                                Text("💳 Card").tag("Card")
+                                Text("💰 Cash").tag("Cash")
+                                Text("📱 PayNow").tag("PayNow")
+                                Text("🟢 GrabPay").tag("GrabPay")
+                            }
+                            .pickerStyle(.segmented)
+                            Button("Confirm Payment") {
+                                showPayment = false
+                                paid = true
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .controlSize(.large)
+                            Button("Cancel") {
+                                showPayment = false
+                            }
+                            .controlSize(.large)
+                        }
+                        .padding(20)
+                    }
                     Button("Back to Order") {
                         showOrder = false
                     }
