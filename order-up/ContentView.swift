@@ -141,10 +141,10 @@ struct ContentView: View {
         .sheet(isPresented: $showOrder) {
             NavigationStack {
                 VStack(spacing: 12) {
-                    Text("Order Placed")
-                        .font(.largeTitle)
-                        .bold()
-                    if milo > 0 {
+                    Text(paid ? "Order Placed" : "Cart")
+                    .font(.largeTitle)
+                    .bold()
+                    if !paid, milo > 0 {
                         HStack {
                             Text("🥤  Milo x\(milo)")
                             Spacer()
@@ -161,7 +161,7 @@ struct ContentView: View {
                             }
                         }
                     }
-                    if teh > 0 {
+                    if !paid, teh > 0 {
                         HStack {
                             Text("🍵  Teh x\(teh)")
                             Spacer()
@@ -178,7 +178,7 @@ struct ContentView: View {
                             }
                         }
                     }
-                    if toast > 0 {
+                    if !paid, toast > 0 {
                         HStack {
                             Text("🍞  Kaya Toast x\(toast)")
                             Spacer()
@@ -195,15 +195,17 @@ struct ContentView: View {
                             }
                         }
                     }
+                    if paid {
+                        if milo > 0 { Text("🥤  Milo x\(milo)") }
+                        if teh > 0 { Text("🍵  Teh x\(teh)") }
+                        if toast > 0 { Text("🍞  Kaya Toast x\(toast)") }
+                    }
                     let subtotal = Double(milo) * 1.5 + Double(toast) * 2.0 + Double(teh) * 1.20
                     let gst = subtotal * 0.09
                     let service = subtotal * 0.10
                     let tipAmount = tip
                     let grandTotal = subtotal + gst + service + tipAmount
                     if paid {
-                        Text("✅ Order Paid!")
-                            .font(.largeTitle)
-                            .bold()
                         Text("Amount paid: $\(grandTotal, specifier: "%.2f")")
                             .font(.title3)
                         Text("via \(paymentMethod)")
