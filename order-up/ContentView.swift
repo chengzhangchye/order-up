@@ -21,9 +21,25 @@ struct ContentView: View {
     @State private var paid = false
     @State private var showPayment = false
     @State private var paymentMethod = "Cash"
+    @State private var darkMode = false
 
     var body: some View {
         VStack(spacing: 20) {
+            HStack {
+                Spacer()
+                Button {
+                    darkMode.toggle()
+                } label: {
+                    Image(systemName: darkMode ? "sun.max.fill" : "moon.fill")
+                        .font(.title2)
+                }
+                .buttonStyle(.bordered)
+            }
+            .padding(.top, 8)
+            .padding(.trailing, 8)
+            .ignoresSafeArea()
+            .offset(y: -75)
+
             Text("Order Up")
                 .font(.largeTitle)
                 .bold()
@@ -131,6 +147,7 @@ struct ContentView: View {
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
             .font(.title2)
+            .disabled(milo == 0 && teh == 0 && toast == 0)
 
             Button("History") {
                 showHistory = true
@@ -139,6 +156,7 @@ struct ContentView: View {
             .font(.title2)
         }
         .padding(20)
+        .preferredColorScheme(darkMode ? .dark : .light)
         .sheet(isPresented: $showOrder) {
             NavigationStack {
                 VStack(spacing: 12) {
