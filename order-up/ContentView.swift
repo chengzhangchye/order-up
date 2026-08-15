@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var showHistory = false
     @State private var history: [String] = []
     @State private var tip: Double = 0
+    @State private var paid = false
 
     var body: some View {
         VStack(spacing: 20) {
@@ -197,6 +198,28 @@ struct ContentView: View {
                     let service = subtotal * 0.10
                     let tipAmount = tip
                     let grandTotal = subtotal + gst + service + tipAmount
+                    if paid {
+                        Text("✅ Order Paid!")
+                            .font(.largeTitle)
+                            .bold()
+                        Text("Amount paid: $\(grandTotal, specifier: "%.2f")")
+                            .font(.title3)
+                        Button("Done") {
+                            var summary = "\(dateFormatter.string(from: Date()))\n"
+                            if milo > 0 { summary += "🥤 Milo x\(milo)\n" }
+                            if teh > 0 { summary += "🍵 Teh x\(teh)\n" }
+                            if toast > 0 { summary += "🍞 Kaya Toast x\(toast)\n" }
+                            summary += String(format: "Total $%.2f", grandTotal)
+                            history.insert(summary, at: 0)
+                            milo = 0
+                            teh = 0
+                            toast = 0
+                            paid = false
+                            showOrder = false
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.large)
+                    } else {
                     Text("Subtotal  $\(subtotal, specifier: "%.2f")")
                     Text("GST (9%)  $\(gst, specifier: "%.2f")")
                     Text("Service (10%)  $\(service, specifier: "%.2f")")
@@ -212,20 +235,16 @@ struct ContentView: View {
                         .font(.title2)
                         .bold()
                         .padding(.top, 8)
-                    Button("Back to Order") {
-                        var summary = "\(dateFormatter.string(from: Date()))\n"
-                        if milo > 0 { summary += "🥤 Milo x\(milo)\n" }
-                        if teh > 0 { summary += "🍵 Teh x\(teh)\n" }
-                        if toast > 0 { summary += "🍞 Kaya Toast x\(toast)\n" }
-                        summary += String(format: "Total $%.2f", grandTotal)
-                        history.insert(summary, at: 0)
-                        milo = 0
-                        teh = 0
-                        toast = 0
-                        showOrder = false
+                    Button("Pay $\(grandTotal, specifier: "%.2f")") {
+                        paid = true
                     }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
+                    Button("Back to Order") {
+                        showOrder = false
+                    }
+                    .controlSize(.large)
+                    }
                 }
             }
         }
