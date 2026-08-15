@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @State private var milo = 0
     @State private var teh = 0
     @State private var toast = 0
@@ -57,7 +58,7 @@ struct ContentView: View {
                 }
             }
             .padding()
-            .background(Color.orange.opacity(0.18))
+            .background(colorScheme == .dark ? Color.orange.opacity(0.25) : Color.orange.opacity(0.18))
             .clipShape(RoundedRectangle(cornerRadius: 16))
 
             HStack {
@@ -86,7 +87,7 @@ struct ContentView: View {
                 }
             }
             .padding()
-            .background(Color.brown.opacity(0.15))
+            .background(colorScheme == .dark ? Color.brown.opacity(0.25) : Color.brown.opacity(0.15))
             .clipShape(RoundedRectangle(cornerRadius: 16))
 
             HStack {
@@ -116,7 +117,7 @@ struct ContentView: View {
                 }
             }
             .padding()
-            .background(Color.yellow.opacity(0.22))
+            .background(colorScheme == .dark ? Color.yellow.opacity(0.25) : Color.yellow.opacity(0.22))
             .clipShape(RoundedRectangle(cornerRadius: 16))
 
             Text("Total  $\(Double(milo) * 1.5 + Double(toast) * 2.0 + Double(teh) * 1.20, specifier: "%.2f")")
