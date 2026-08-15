@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var toast = 0
     @State private var flag = false
     @State private var arr: [String] = []
+    @State private var showOrder = false
 
     var body: some View {
         VStack(spacing: 20) {
@@ -34,6 +35,15 @@ struct ContentView: View {
                     .font(.title)
                     .monospacedDigit()
                 Button {
+                    milo -= 1
+                    if milo < 0 { milo = 0 }
+                } label: {
+                    Image(systemName: "minus.circle.fill")
+                        .font(.largeTitle)
+                }
+                .disabled(milo == 0)
+                .opacity(milo == 0 ? 0.3 : 1)
+                Button {
                     milo += 1
                 } label: {
                     Image(systemName: "plus.circle.fill")
@@ -53,6 +63,15 @@ struct ContentView: View {
                 Text("\(teh)")
                     .font(.title)
                     .monospacedDigit()
+                Button {
+                    teh -= 1
+                    if teh < 0 { teh = 0 }
+                } label: {
+                    Image(systemName: "minus.circle.fill")
+                        .font(.largeTitle)
+                }
+                .disabled(teh == 0)
+                .opacity(teh == 0 ? 0.3 : 1)
                 Button {
                     teh += 1
                 } label: {
@@ -74,6 +93,15 @@ struct ContentView: View {
                     .font(.title)
                     .monospacedDigit()
                 Button {
+                    toast -= 1
+                    if toast < 0 { toast = 0 }
+                } label: {
+                    Image(systemName: "minus.circle.fill")
+                        .font(.largeTitle)
+                }
+                .disabled(toast == 0)
+                .opacity(toast == 0 ? 0.3 : 1)
+                Button {
                     toast += 1
                     arr.append("x")
                 } label: {
@@ -91,12 +119,43 @@ struct ContentView: View {
                 .padding(.top, 8)
 
             Button("Place Order") {
+                showOrder = true
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
             .font(.title2)
         }
         .padding(20)
+        .sheet(isPresented: $showOrder) {
+            NavigationStack {
+                VStack(spacing: 12) {
+                    Text("Order Placed")
+                        .font(.largeTitle)
+                        .bold()
+                    if milo > 0 {
+                        Text("🥤  Milo x\(milo)")
+                    }
+                    if teh > 0 {
+                        Text("🍵  Teh x\(teh)")
+                    }
+                    if toast > 0 {
+                        Text("🍞  Kaya Toast x\(toast)")
+                    }
+                    Text("Total  $\(Double(milo) * 1.5 + Double(toast) * 2.0 + Double(teh) * 1.20, specifier: "%.2f")")
+                        .font(.title2)
+                        .bold()
+                        .padding(.top, 8)
+                    Button("Back to Order") {
+                        milo = 0
+                        teh = 0
+                        toast = 0
+                        showOrder = false
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                }
+            }
+        }
     }
 }
 
